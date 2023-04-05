@@ -42,7 +42,7 @@ jobs:
           keys: [frontend-build]
       - run:
           name: Change directory to frontend
-          command: cd frontend
+          command: cd cdond-c3-projectstarter/frontend
       - run:
           name: Print path current directory
           command: pwd
