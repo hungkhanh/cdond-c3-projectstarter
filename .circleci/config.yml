@@ -46,6 +46,9 @@ jobs:
       - run:
           name: Print path current directory
           command: pwd
+      - run:
+          name: List dir and file
+          command: ls
       - run: 
           name: Install dependencies
           command: npm install
