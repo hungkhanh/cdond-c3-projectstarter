@@ -43,6 +43,9 @@ jobs:
       - run:
           name: Change directory to frontend
           command: cd frontend
+      - run:
+          name: Print path current directory
+          command: pwd
       - run: 
           name: Install dependencies
           command: npm install
