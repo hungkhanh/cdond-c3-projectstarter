@@ -40,18 +40,6 @@ jobs:
       - checkout
       - restore_cache:
           keys: [frontend-build]
-      # - run:
-      #     name: List dir and file
-      #     command: ls
-      # - run:
-      #     name: Change directory to frontend
-      #     command: cd frontend
-      # - run:
-      #     name: Print path current directory
-      #     command: pwd
-      # - run: 
-      #     name: Install dependencies
-      #     command: npm install
       - run: 
           name: Build frontend
           command: |
@@ -62,21 +50,22 @@ jobs:
           paths: [frontend/node_modules]
           key: frontend-build
 
-  # build-backend:
-  #   docker:
-  #     - image: circleci/node:13.8.0
-  #   steps:
-  #     - checkout
-  #     - restore_cache:
-  #         keys: [backend-build]
-  #     - run:
-  #         name: Back-end build
-  #         command: |
-  #            # Your code here
-  #            exit 1
-  #     - save_cache:
-  #         paths: [backend/node_modules]
-  #         key: backend-build
+  build-backend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - restore_cache:
+          keys: [backend-build]
+      - run:
+          name: Back-end build
+          command: |
+            cd backend
+            npm install
+            npm run build
+      - save_cache:
+          paths: [backend/node_modules]
+          key: backend-build
 
   # test-frontend:
   #   docker:
@@ -280,7 +269,7 @@ workflows:
   default:
     jobs:
       - build-frontend
-      # - build-backend
+      - build-backend
       # - test-frontend:
       #     requires: [build-frontend]
       # - test-backend:
