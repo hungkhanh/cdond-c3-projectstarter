@@ -54,30 +54,7 @@ jobs:
       - slack/notify:
           channel: $SLACK_DEFAULT_CHANNEL
           event: fail
-          template: |
-            {
-              "attachments": 
-                [
-                  {
-                    "fallback": "Job failed: $CIRCLE_JOB",
-                    "color": "#FF0000",
-                    "pretext": "Job failed: $CIRCLE_JOB",
-                    "fields": 
-                    [
-                      {
-                        "title": "Project",
-                        "value": "$CIRCLE_PROJECT_REPONAME",
-                        "short": true
-                      },
-                      {
-                        "title": "Job",
-                        "value": "$CIRCLE_JOB",
-                        "short": true
-                      }
-                    ]
-                  }
-                ]
-            }
+          template: basic_fail_1
 
   build-backend:
     docker:
