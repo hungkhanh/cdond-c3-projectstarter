@@ -51,8 +51,10 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
-      - slack/notify:
-          message: "Build failed!"
+      - run:
+          name: Slack notify
+          slack/notify:
+            message: "Build failed!"
           when: on_fail
 
   build-backend:
@@ -71,8 +73,10 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
-      - slack/notify:
-          message: "Build failed!"
+      - run:
+          name: Slack notify
+          slack/notify:
+            message: "Build failed!"
           when: on_fail
           
 
