@@ -51,11 +51,33 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
-      - run:
-          name: Slack notify
-          slack/notify:
-            message: "Build failed!"
-          when: on_fail
+      - slack/notify:
+          channel: $SLACK_DEFAULT_CHANNEL
+          event: fail
+          template: |
+            {
+              "attachments": 
+                [
+                  {
+                    "fallback": "Job failed: $CIRCLE_JOB",
+                    "color": "#FF0000",
+                    "pretext": "Job failed: $CIRCLE_JOB",
+                    "fields": 
+                    [
+                      {
+                        "title": "Project",
+                        "value": "$CIRCLE_PROJECT_REPONAME",
+                        "short": true
+                      },
+                      {
+                        "title": "Job",
+                        "value": "$CIRCLE_JOB",
+                        "short": true
+                      }
+                    ]
+                  }
+                ]
+            }
 
   build-backend:
     docker:
@@ -72,13 +94,7 @@ jobs:
             npm run build
       - save_cache:
           paths: [backend/node_modules]
-          key: backend-build
-      - run:
-          name: Slack notify
-          slack/notify:
-            message: "Build failed!"
-          when: on_fail
-          
+          key: backend-build        
 
   test-frontend:
     docker:
