@@ -87,7 +87,7 @@ jobs:
 
   build-frontend:
     docker:
-      - image: cimg/base:2023.04
+      - image: cimg/base:2021.05-18.04
     steps:
       - checkout
       - install_node_13
