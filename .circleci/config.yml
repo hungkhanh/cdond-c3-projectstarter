@@ -317,9 +317,11 @@ workflows:
   default:
     jobs:
       - build-frontend:
-          requires:
-            - notify_fail:
+          requires: [
+              notify_fail:
                 context: slack-secrets
+            ]
+                
       - build-backend
       - test-frontend:
           requires: [build-frontend]
