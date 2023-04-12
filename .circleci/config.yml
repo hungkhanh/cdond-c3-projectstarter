@@ -91,7 +91,7 @@ jobs:
           paths: [frontend/node_modules]
           key: frontend-build
       - executor: handle_fail
-          when: on_fail
+          # when: on_fail
       # - slack/notify:
       #     event: fail
       #     template: basic_fail_1
