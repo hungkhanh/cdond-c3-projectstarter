@@ -7,12 +7,14 @@ commands:
   notify_slack_fail:
     steps:
       - slack/notify:
+          channel: $SLACK_DEFAULT_CHANNEL
           event: fail
           template: basic_fail_1
   
   notify_slack_pass:
     steps:
       - slack/notify:
+          channel: $SLACK_DEFAULT_CHANNEL
           event: pass
           template: basic_success_1
 #   destroy-environment:
