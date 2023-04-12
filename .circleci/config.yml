@@ -49,13 +49,13 @@ orbs:
 #             fi
             
 jobs:
-  notify_fail:
+  notify_pass:
     docker:
       - image: cimg/base:2023.04
     steps:
       - slack/notify:
-          event: fail
-          template: basic_fail_1
+          event: pass
+          template: basic_success_1
 
   build-frontend:
     docker:
@@ -316,12 +316,7 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-frontend:
-          requires: [
-              notify_fail:
-                context: slack-secrets
-            ]
-                
+      - build-frontend
       - build-backend
       - test-frontend:
           requires: [build-frontend]
@@ -331,8 +326,8 @@ workflows:
           requires: [build-frontend]
       - scan-backend:
           requires: [build-backend]
-      # - notify_fail:
-      #     context: slack-secrets
+      - notify_pass:
+          context: slack-secrets
       # - deploy-infrastructure:
       #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       #     filters:
