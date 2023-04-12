@@ -10,7 +10,7 @@ orbs:
 #           channel: $SLACK_DEFAULT_CHANNEL
 #           event: fail
 #           template: basic_fail_1
-  
+
 #   notify_slack_pass:
 #     steps:
 #       - slack/notify:
@@ -20,7 +20,7 @@ orbs:
 #   destroy-environment:
 #     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
 #     parameters:
-#       # Add parameter here   
+#       # Add parameter here
 #     steps:
 #       - run:
 #           name: Destroy environments
@@ -32,7 +32,7 @@ orbs:
 #   revert-migrations:
 #     description: Revert the last migration if successfully run in the current workflow.
 #     parameters:
-#       # Add parameter here     
+#       # Add parameter here
 #     steps:
 #       - run:
 #           name: Revert migrations
@@ -40,14 +40,14 @@ orbs:
 #           command: |
 #             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
 #             SUCCESS = 1
-#             if(( $SUCCESS==1 )); 
+#             if(( $SUCCESS==1 ));
 #             then
 #             #  cd ~/project/backend
 #             #  npm install
 #             #  Add revert code here. You can find this in the Getting Started section.
 #               exit 1
 #             fi
-            
+
 jobs:
   notify_pass:
     docker:
@@ -57,6 +57,14 @@ jobs:
           event: pass
           template: basic_success_1
 
+  notify_fail:
+    docker:
+      - image: cimg/base:2023.04
+    steps:
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
   build-frontend:
     docker:
       - image: circleci/node:13.8.0
@@ -64,7 +72,7 @@ jobs:
       - checkout
       - restore_cache:
           keys: [frontend-build]
-      - run: 
+      - run:
           name: Build frontend
           command: |
             npm install
@@ -72,7 +80,9 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
-      # - notify_slack_fail
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
 
   build-backend:
     docker:
@@ -89,7 +99,7 @@ jobs:
             npm run build
       - save_cache:
           paths: [backend/node_modules]
-          key: backend-build        
+          key: backend-build
 
   test-frontend:
     docker:
@@ -104,7 +114,7 @@ jobs:
             cd frontend
             npm install
             npm run test
-                
+
   test-backend:
     docker:
       - image: circleci/node:13.8.0
@@ -118,7 +128,7 @@ jobs:
             cd backend
             npm install
             npm run test
-            
+
   scan-frontend:
     docker:
       - image: circleci/node:13.8.0
@@ -159,7 +169,7 @@ jobs:
   #             --template-file .circleci/files/backend.yml \
   #             #--tags project=your-tag \
   #             # --stack-name "your back-end stack name with workflow id" \
-  #             # --parameter-overrides ID="your workflow id"  
+  #             # --parameter-overrides ID="your workflow id"
   #             exit 1
   #     - run:
   #         name: Ensure front-end infrastructure exist
@@ -168,7 +178,7 @@ jobs:
   #             --template-file .circleci/files/frontend.yml \
   #             #--tags project=your-tag \
   #             # --stack-name "your front-end stack name with workflow id" \
-  #             # --parameter-overrides ID="your workflow id"  
+  #             # --parameter-overrides ID="your workflow id"
   #             exit 1
   #     - run:
   #         name: Add back-end ip to ansible inventory
@@ -179,7 +189,7 @@ jobs:
   #         root: ~/
   #         paths:
   #           - project/.circleci/ansible/inventory.txt
-  #     # Here's where you will add some code to rollback on failure      
+  #     # Here's where you will add some code to rollback on failure
 
   # configure-infrastructure:
   #   docker:
@@ -198,7 +208,7 @@ jobs:
   #         command: |
   #           # Your code here
   #           exit 1
-  #     # Here's where you will add some code to rollback on failure      
+  #     # Here's where you will add some code to rollback on failure
 
   # run-migrations:
   #   docker:
@@ -215,7 +225,7 @@ jobs:
   #         command: |
   #           # Your code here
   #           exit 1
-  #    # Here's where you will add some code to rollback on failure      
+  #    # Here's where you will add some code to rollback on failure
 
   # deploy-frontend:
   #   docker:
@@ -236,8 +246,8 @@ jobs:
   #         name: Deploy frontend objects
   #         command: |
   #           # your code here
-  #     # Here's where you will add some code to rollback on failure      
-                    
+  #     # Here's where you will add some code to rollback on failure
+
   # deploy-backend:
   #   docker:
   #     # Docker image here that supports Ansible
@@ -253,11 +263,11 @@ jobs:
   #         name: Deploy backend
   #         command: |
   #           # your code here
-  #     # Here's where you will add some code to rollback on failure  
+  #     # Here's where you will add some code to rollback on failure
 
   # smoke-test:
   #   docker:
-  #     # Lightweight Docker image 
+  #     # Lightweight Docker image
   #   steps:
   #     # Checkout code from git
   #     - run:
@@ -276,7 +286,7 @@ jobs:
   #         name: Frontend smoke test.
   #         command: |
   #           # your code here
-  #     # Here's where you will add some code to rollback on failure  
+  #     # Here's where you will add some code to rollback on failure
 
   # cloudfront-update:
   #   docker:
@@ -291,7 +301,7 @@ jobs:
   #         name: Update cloudfront distribution
   #         command: |
   #           # your code here
-  #     # Here's where you will add some code to rollback on failure  
+  #     # Here's where you will add some code to rollback on failure
 
 # cleanup:
 #     docker:
@@ -311,12 +321,12 @@ jobs:
 #             then
 #               # your code here
 #             fi
-            
 
 workflows:
   default:
     jobs:
-      - build-frontend
+      - build-frontend:
+          context: slack-secrets
       - build-backend
       - test-frontend:
           requires: [build-frontend]
@@ -326,8 +336,10 @@ workflows:
           requires: [build-frontend]
       - scan-backend:
           requires: [build-backend]
-      - notify_pass:
-          context: slack-secrets
+      # - notify_pass:
+      #     context: slack-secrets
+      # - notify_fail:
+      #     context: slack-secrets
       # - deploy-infrastructure:
       #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       #     filters:
