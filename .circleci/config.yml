@@ -90,7 +90,7 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
-      - executor: handle_fail
+    executor: handle_fail
           # when: on_fail
       # - slack/notify:
       #     event: fail
