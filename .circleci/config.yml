@@ -93,9 +93,9 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
-      - slack/notify:
-          event: fail
-          template: basic_fail_1
+      # - slack/notify:
+      #     event: fail
+      #     template: basic_fail_1
     # executor: handle_fail
           # when: on_fail
 
@@ -340,8 +340,7 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-frontend:
-          context: slack-secrets
+      - build-frontend
       - build-backend
       - test-frontend:
           requires: [build-frontend]
@@ -355,6 +354,7 @@ workflows:
       #     context: slack-secrets
       - notify_fail:
           context: slack-secrets
+          requires: [build-frontend]
       # - deploy-infrastructure:
       #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       #     filters:
