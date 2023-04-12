@@ -93,7 +93,7 @@ jobs:
       - install_node_13
       - restore_cache:
           keys: [frontend-build]
-      - run: node -V
+      - run: node -v
       - run:
           name: Build frontend
           command: |
