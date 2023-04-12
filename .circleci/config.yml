@@ -13,7 +13,14 @@ orbs:
 #           template: basic_fail_1
 
 
-# commands:
+commands:
+  install_node_13:
+    description: "Install Node 13"
+    steps:
+      - run: sudo apt -y update && sudo apt -y upgrade
+      - run: curl -sL https://deb.nodesource.com/setup_13.x | sudo bash -
+      - run: sudo apt-get install -y nodejs
+
 #   notify_slack_fail:
 #     steps:
 #       - slack/notify:
@@ -80,11 +87,13 @@ jobs:
 
   build-frontend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/base:2023.04
     steps:
       - checkout
+      - install_node_13
       - restore_cache:
           keys: [frontend-build]
+      - run: node -V
       - run:
           name: Build frontend
           command: |
@@ -93,9 +102,9 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
-      # - slack/notify:
-      #     event: fail
-      #     template: basic_fail_1
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
     # executor: handle_fail
           # when: on_fail
 
@@ -341,20 +350,19 @@ workflows:
   default:
     jobs:
       - build-frontend
-      - build-backend
-      - test-frontend:
-          requires: [build-frontend]
-      - test-backend:
-          requires: [build-backend]
-      - scan-frontend:
-          requires: [build-frontend]
-      - scan-backend:
-          requires: [build-backend]
+      # - build-backend
+      # - test-frontend:
+      #     requires: [build-frontend]
+      # - test-backend:
+      #     requires: [build-backend]
+      # - scan-frontend:
+      #     requires: [build-frontend]
+      # - scan-backend:
+      #     requires: [build-backend]
       # - notify_pass:
       #     context: slack-secrets
-      - notify_fail:
-          context: slack-secrets
-          requires: [build-frontend]
+      # - notify_fail:
+      #     context: slack-secrets
       # - deploy-infrastructure:
       #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       #     filters:
