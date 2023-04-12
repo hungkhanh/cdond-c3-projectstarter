@@ -3,16 +3,6 @@ version: 2.1
 orbs:
   slack: circleci/slack@4.12.1
 
-# executors:
-#   handle_fail:
-#     docker:
-#       - image: cimg/base:2023.04
-#     steps:
-#       - slack/notify:
-#           event: fail
-#           template: basic_fail_1
-
-
 commands:
   install_node_13:
     description: "Install Node 13"
@@ -66,25 +56,6 @@ commands:
 #             fi
 
 jobs:
-  notify_pass:
-    docker:
-      - image: cimg/base:2023.04
-    steps:
-      - slack/notify:
-          event: pass
-          template: basic_success_1
-
-  notify_fail:
-    docker:
-      - image: cimg/base:2023.04
-    steps:
-      - run:
-          name: Exit 1
-          command: exit 1
-      - slack/notify:
-          event: fail
-          template: basic_fail_1
-
   build-frontend:
     docker:
       - image: cimg/base:2021.05-18.04
@@ -93,10 +64,10 @@ jobs:
       - install_node_13
       - restore_cache:
           keys: [frontend-build]
-      - run: node -v
       - run:
           name: Build frontend
           command: |
+            cd frontend
             npm install
             npm run build
       - save_cache:
@@ -105,14 +76,16 @@ jobs:
       - slack/notify:
           event: fail
           template: basic_fail_1
-    # executor: handle_fail
-          # when: on_fail
+      - slack/notify:
+          event: pass
+          template: basic_success_1
 
   build-backend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/base:2021.05-18.04
     steps:
       - checkout
+      - install_node_13
       - restore_cache:
           keys: [backend-build]
       - run:
@@ -124,12 +97,19 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+      - slack/notify:
+          event: pass
+          template: basic_success_1
 
   test-frontend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/base:2021.05-18.04
     steps:
       - checkout
+      - install_node_13
       - restore_cache:
           keys: [frontend-build]
       - run:
@@ -141,9 +121,10 @@ jobs:
 
   test-backend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/base:2021.05-18.04
     steps:
       - checkout
+      - install_node_13
       - restore_cache:
           keys: [backend-build]
       - run:
@@ -155,9 +136,10 @@ jobs:
 
   scan-frontend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/base:2021.05-18.04
     steps:
       - checkout
+      - install_node_13
       - restore_cache:
           keys: [frontend-build]
       - run:
@@ -169,9 +151,10 @@ jobs:
 
   scan-backend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/base:2021.05-18.04
     steps:
       - checkout
+      - install_node_13
       - restore_cache:
           keys: [backend-build]
       - run:
