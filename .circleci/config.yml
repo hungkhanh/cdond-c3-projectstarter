@@ -3,6 +3,16 @@ version: 2.1
 orbs:
   slack: circleci/slack@4.12.1
 
+executors:
+  handle_fail:
+    docker:
+      - image: cimg/base:2023.04
+    steps:
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
+
 # commands:
 #   notify_slack_fail:
 #     steps:
@@ -80,7 +90,7 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
-      - notify_fail:
+      - executor: handle_fail
           when: on_fail
       # - slack/notify:
       #     event: fail
@@ -337,6 +347,7 @@ workflows:
           requires: [build-frontend]
       - scan-backend:
           requires: [build-backend]
+    wh
       # - notify_pass:
       #     context: slack-secrets
       # - notify_fail:
