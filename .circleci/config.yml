@@ -347,7 +347,6 @@ workflows:
           requires: [build-frontend]
       - scan-backend:
           requires: [build-backend]
-    wh
       # - notify_pass:
       #     context: slack-secrets
       # - notify_fail:
