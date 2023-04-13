@@ -154,15 +154,14 @@ jobs:
   deploy-infrastructure:
     # The base image is updated (e.g. change from Amazon Linux to Alpine Linux)
     docker:
-      - image: amazon/aws-cli 
+      - image: amazon/aws-cli
     steps:
       - checkout
       - run:
-          name: Install tar
-          command: yum install tar -y
-      - run:
-          name: Install gzip
-          command: yum install gzip -y
+          name: Install tar and gzip
+          command: |
+            yum install tar -y
+            yum install gzip -y
       - run:
           name: Ensure back-end infrastructure exists
           command: |
@@ -191,25 +190,27 @@ jobs:
           paths:
             - project/.circleci/ansible/inventory.txt
 
-
-  # configure-infrastructure:
-  #   docker:
-  #     # Docker image here that supports Ansible
-  #   steps:
-  #     # Checkout code from git
-  #     # Add ssh keys with fingerprint
-  #     # attach workspace
-  #     - run:
-  #         name: Install dependencies
-  #         command: |
-  #           # Your code here
-  #           exit 1
-  #     - run:
-  #         name: Configure server
-  #         command: |
-  #           # Your code here
-  #           exit 1
-  #     # Here's where you will add some code to rollback on failure
+  configure-infrastructure:
+    docker:
+      - image: python:3.7-alpine
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprinters:
+            - "d7:95:9e:ed:59:16:ad:23:33:b9:32:b6:19:c3:ce:16"
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update tar gzip ansible
+            pip3 install awscli
+      - run:
+          name: Configure server
+          command: |
+            cd .circleci/ansible
+            ansible-playbook -i inventory.txt configure-server.yml
+      - destroy-environment
 
   # run-migrations:
   #   docker:
