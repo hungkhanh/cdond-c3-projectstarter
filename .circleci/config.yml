@@ -255,14 +255,9 @@ jobs:
             yum install tar -y
             yum install gzip -y
       - run:
-          name: Install ansible
-          command: |
-            python3 -m pip install ansible
-      - run:
           name: Check dependencies version
           command: |
             node -v
-            ansible --version
       - run:
           name: Get backend url
           command: |
