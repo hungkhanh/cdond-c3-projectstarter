@@ -6,7 +6,7 @@
 
 - name: Install Node.js and npm
   apt:
-    name: nodejs
+    name: ["nodejs", "npm"]
     state: present
 
 - name: Install pm2
