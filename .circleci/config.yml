@@ -124,10 +124,11 @@ jobs:
 
   scan-frontend:
     docker:
-      - image: cimg/base:2021.05-18.04
+      # - image: cimg/base:2021.05-18.04
+      - image: circleci/node:13.8.0
     steps:
       - checkout
-      - install_node_13
+      # - install_node_13
       - restore_cache:
           keys: [frontend-build]
       - run:
@@ -139,10 +140,11 @@ jobs:
 
   scan-backend:
     docker:
-      - image: cimg/base:2021.05-18.04
+      # - image: cimg/base:2021.05-18.04
+      - image: circleci/node:13.8.0
     steps:
       - checkout
-      - install_node_13
+      # - install_node_13
       - restore_cache:
           keys: [backend-build]
       - run:
