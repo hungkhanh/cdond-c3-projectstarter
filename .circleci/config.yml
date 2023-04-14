@@ -241,7 +241,12 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - install_node_13
+      - run:
+          name: Install Node 13 - Amazon Linux
+          command: |
+            yum install -y gcc-c++ make
+            curl -sL https://rpm.nodesource.com/setup_13.x | bash -
+            yum install -y nodejs
       - run:
           name: Install tar and gzip
           command: |
