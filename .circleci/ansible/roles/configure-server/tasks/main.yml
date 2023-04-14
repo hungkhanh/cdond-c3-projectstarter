@@ -4,6 +4,11 @@
     upgrade: yes
     update_cache: yes
 
+- name: Import Node.js repository GPG key
+  apt_key:
+    url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+    state: present
+
 - name: Add Node.js repository
   apt_repository:
     repo: deb https://deb.nodesource.com/node_13.x focal main
