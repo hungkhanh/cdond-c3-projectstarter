@@ -241,8 +241,6 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - attach_workspace:
-          at: ~/
       - install_node_13
       - run:
           name: Install tar and gzip
