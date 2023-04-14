@@ -227,7 +227,7 @@ jobs:
       - run:
           name: Send migration results to kvdb.io
           command: |
-              if [ grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt ] || [ grep -q "No migrations are pending" ~/project/backend/migrations_dump.txt ]
+              if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt || grep -q "No migrations are pending" ~/project/backend/migrations_dump.txt
               then
                 echo "Running"
                 curl --request PUT --insecure https://kvdb.io/${KVDB_TOKEN}/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
