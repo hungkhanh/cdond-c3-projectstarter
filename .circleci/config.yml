@@ -286,7 +286,7 @@ jobs:
           fingerprinters:
             - "d7:95:9e:ed:59:16:ad:23:33:b9:32:b6:19:c3:ce:16"
       - attach_workspace:
-          at: at: ~/
+          at: ~/
       - install_node_13
       - run:
           name: Install Ansible
@@ -398,8 +398,8 @@ workflows:
           requires: [configure-infrastructure]
       - deploy-frontend:
           requires: [run-migrations]
-      # - deploy-backend:
-      #     requires: [run-migrations]
+      - deploy-backend:
+          requires: [run-migrations]
       # - smoke-test:
       #     requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:
