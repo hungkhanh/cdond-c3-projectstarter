@@ -11,6 +11,7 @@
   file:
     path: /home/app
     state: directory
+    mode: 0755
 
 - name: Copy artifact to app folder
   become: true
@@ -28,7 +29,7 @@
   become: true
   shell: |
     cd /home/app
-    npm install
+    npm install --force
     npm run build
     pm2 stop default
     pm2 start npm -- start
