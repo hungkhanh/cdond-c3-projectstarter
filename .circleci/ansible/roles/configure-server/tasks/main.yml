@@ -27,6 +27,11 @@
     name: pm2
     global: yes
 
+- name: Install pip3
+  apt:
+    name: python3-pip
+    state: present
+
 - name: Install AWS CLI package
   apt:
     name: awscli
