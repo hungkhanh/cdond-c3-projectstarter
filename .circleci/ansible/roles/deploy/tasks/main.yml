@@ -1,11 +1,4 @@
 ---
-- name: Check version
-  become: true
-  shell: |
-    aws --version
-    node --version
-    npm --version
-
 - name: Create folder
   become: true
   file:
@@ -29,7 +22,7 @@
   become: true
   shell: |
     cd /home/app
-    npm install --force
+    npm install
     npm run build
     pm2 stop default
     pm2 start npm -- start
