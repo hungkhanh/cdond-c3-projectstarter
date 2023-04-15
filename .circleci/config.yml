@@ -338,7 +338,7 @@ jobs:
           command: |
             export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --output text)
             export API_URL="http://${BACKEND_IP}:3030"
-            if curl "${API_URL}/api/status" | grep '{"status":"ok","version":"1.0.0","environment":"production"}''
+            if curl "${API_URL}/api/status" | grep `{"status":"ok","version":"1.0.0","environment":"production"}`
             then
               return 0
             else
@@ -354,8 +354,8 @@ jobs:
             else
               return 1
             fi
-      - destroy-environment
-      - revert-migrations
+      # - destroy-environment
+      # - revert-migrations
 
   cloudfront-update:
     docker:
