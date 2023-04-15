@@ -330,7 +330,7 @@ jobs:
 
   smoke-test:
     docker:
-      - image: amazon/awscli
+      - image: amazon/aws-cli
     steps:
       - checkout
       - install_node_13_rpm
