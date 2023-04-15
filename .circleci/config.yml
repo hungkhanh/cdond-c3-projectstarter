@@ -287,8 +287,6 @@ jobs:
       - add_ssh_keys:
           fingerprinters:
             - "d7:95:9e:ed:59:16:ad:23:33:b9:32:b6:19:c3:ce:16"
-      - attach_workspace:
-          at: ~/
       - run:
           name: Install tar and gzip
           command: |
@@ -305,6 +303,8 @@ jobs:
           command: |
             yum update -y
             amazon-linux-extras install ansible2 -y
+      - attach_workspace:
+          at: ~/
       - run:
           name: Deploy backend
           command: |
