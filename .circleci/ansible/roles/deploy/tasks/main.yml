@@ -1,20 +1,31 @@
 ---
+- name: Check version
+  become: true
+  shell: |
+    aws --version
+    node --version
+    npm --version
+
 - name: Create folder
+  become: true
   file:
     path: /home/app
     state: directory
 
 - name: Copy artifact to app folder
+  become: true
   copy:
     src: ~/project/artifact.tar.gz
     dest: /home/app
 
 - name: Extract artifact
+  become: true
   shell: |
     cd /home/app
     tar -xvzf artifact.tar.gz
 
 - name: Start the app
+  become: true
   shell: |
     cd /home/app
     npm install
