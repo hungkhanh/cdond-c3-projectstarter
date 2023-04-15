@@ -26,3 +26,13 @@
   npm:
     name: pm2
     global: yes
+
+- name: Install AWS CLI package
+  apt:
+    name: awscli
+    state: present
+
+- name: Upgrade AWS CLI to latest version
+  pip:
+    name: awscli
+    state: latest

@@ -34,9 +34,11 @@ commands:
           when: on_fail
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS = $(curl --request GET --insecure https://kvdb.io/${KVDB_TOKEN}/migration_${CIRCLE_WORKFLOW_ID:0:7})
+            SUCCESS=$(curl --request GET --insecure https://kvdb.io/${KVDB_TOKEN}/migration_${CIRCLE_WORKFLOW_ID:0:7})
+            echo "The value of SUCCESS is: ${SUCCESS}"
             if(( $SUCCESS==1 ));
             then
+              echo "Revert migrations"
               cd ~/project/backend
               npm install
               npm run migration:revert
@@ -231,11 +233,11 @@ jobs:
       - run:
           name: Send migration results to kvdb.io
           command: |
-              if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt || grep -q "No migrations are pending" ~/project/backend/migrations_dump.txt
-              then
-                echo "Running"
-                curl --request PUT --insecure https://kvdb.io/${KVDB_TOKEN}/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
-              fi
+            if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt || grep -q "No migrations are pending" ~/project/backend/migrations_dump.txt
+            then
+              echo "Running"
+              curl --request PUT --insecure https://kvdb.io/${KVDB_TOKEN}/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
+            fi
       - destroy-environment
 
   deploy-frontend:
@@ -276,7 +278,7 @@ jobs:
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - destroy-environment
       - revert-migrations
-      
+
   deploy-backend:
     docker:
       - image: cimg/base:2021.05-18.04
