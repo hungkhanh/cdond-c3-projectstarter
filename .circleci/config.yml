@@ -17,7 +17,7 @@ commands:
       - run: yum install -y gcc-c++ make
       - run: curl -sL https://rpm.nodesource.com/setup_13.x | bash -
       - run: yum install -y nodejs
-  
+
   install_tar_gzip:
     description: "Install tar and gzip - Amazon Linux"
     steps:
@@ -367,8 +367,8 @@ jobs:
               --stack-name InitialStack \
               --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"
       - destroy-environment
-      - revert-migrations          
-      
+      - revert-migrations
+
   cleanup:
     docker:
       - image: amazon/aws-cli
@@ -421,7 +421,8 @@ workflows:
           filters:
             branches:
               # only: [infrastructure]
-              only: [master]
+              # only: [master]
+              only: [monitoring]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
       - run-migrations:
