@@ -377,11 +377,6 @@ jobs:
       - run:
           name: Remove old stacks and files
           command: |
-            # Fetch the Old workflow ID
-            # export OldWorkflowID=$(aws cloudformation \
-            #   list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-            #   --no-paginate --output text)
-
             # Fetch the Stack of backend or frontend name
             export LatestStackDeployName=$(aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE UPDATE_COMPLETE --query "sort_by(StackSummaries, &CreationTime)[-3].StackName" --no-paginate --output text)
 
