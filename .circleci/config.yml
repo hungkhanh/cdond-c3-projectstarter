@@ -384,10 +384,11 @@ jobs:
 
             # Fetch the Stack of backend or frontend name
             export LatestStackDeployName=$(aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE UPDATE_COMPLETE --query "sort_by(StackSummaries, &CreationTime)[-3].StackName" --no-paginate --output text)
-            
-            # Get WorkflowID in latest stack deploy name
-            export LatestWorkflowID="${LatestStackDeploy:${$LatestStackDeploy}-7}"
 
+            # Get WorkflowID in latest stack deploy name
+            export LatestWorkflowID="${LatestStackDeployName:${#LatestStackDeployName}-7}"
+
+            echo LatestStackDeployName: "${LatestStackDeployName}"
             echo LatestWorkflowID: "${LatestWorkflowID}"
             echo Current_CIRCLE_WORKFLOW_ID: "${CIRCLE_WORKFLOW_ID:0:7}"
 
