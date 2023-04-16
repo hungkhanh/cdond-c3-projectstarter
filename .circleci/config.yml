@@ -163,7 +163,6 @@ jobs:
             npm audit fix --audit-level=critical --force
 
   deploy-infrastructure:
-    # The base image is updated (e.g. change from Amazon Linux to Alpine Linux)
     docker:
       - image: amazon/aws-cli
     steps:
