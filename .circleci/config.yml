@@ -421,8 +421,8 @@ workflows:
           filters:
             branches:
               # only: [infrastructure]
-              # only: [master]
-              only: [monitoring]
+              only: [master]
+              # only: [monitoring]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
       - run-migrations:
