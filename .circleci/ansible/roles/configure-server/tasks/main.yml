@@ -1,0 +1,51 @@
+---
+- name: Update and upgrade packages
+  become: true
+  apt:
+    upgrade: yes
+    update_cache: yes
+
+- name: Import Node.js repository GPG key
+  become: true
+  apt_key:
+    url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+    state: present
+
+- name: Add Node.js repository
+  become: true
+  apt_repository:
+    repo: deb https://deb.nodesource.com/node_13.x focal main
+    state: present
+    update_cache: yes
+    filename: nodesource.list
+
+- name: Install Node.js and npm
+  become: true
+  apt:
+    name: 
+      - nodejs
+    state: present
+
+- name: Install pm2
+  become: true
+  npm:
+    name: pm2
+    global: yes
+
+- name: Install pip3
+  become: true
+  apt:
+    name: python3-pip
+    state: present
+
+- name: Install AWS CLI package
+  become: true
+  apt:
+    name: awscli
+    state: present
+
+- name: Upgrade AWS CLI to latest version
+  become: true
+  pip:
+    name: awscli
+    state: latest
